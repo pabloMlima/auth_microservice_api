@@ -1,13 +1,22 @@
 package com.hubsi.authmicroservice.services;
 
 import com.hubsi.authmicroservice.dto.response.AuthResponse;
+import com.hubsi.authmicroservice.entity.RefreshToken;
 import com.hubsi.authmicroservice.entity.User;
+import com.hubsi.authmicroservice.repository.RefreshTokenRepository;
 import com.hubsi.authmicroservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Map;
+import java.util.UUID;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +25,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
 
     public AuthResponse authenticateUser(String email, String password) {
@@ -29,6 +39,32 @@ public class AuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
 
         String jwtToken = jwtService.generateToken(user);
-        return new AuthResponse(jwtToken, "Login realizado com sucesso!");
+        final Duration refreshTokenTtl = Duration.ofDays(7);
+
+        return new AuthResponse(
+                jwtToken,
+                saveRefreshToken(refreshTokenTtl, user).getId()
+        );
+    }
+
+    private RefreshToken saveRefreshToken(Duration refreshTokenTtl, User user) {
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.setUser(user);
+        refreshToken.setExpiresAt(Instant.now().plus(refreshTokenTtl));
+        return refreshTokenRepository.save(refreshToken);
+    }
+
+    public AuthResponse refreshToken(UUID refreshToken) {
+        final var refreshTokenEntity = refreshTokenRepository
+                .findByIdAndExpiresAtAfter(refreshToken, Instant.now())
+                .orElseThrow(() -> new UsernameNotFoundException("Refresh token inválido ou expirado!"));
+
+        final var newAccessToken = jwtService.generateToken(refreshTokenEntity.getUser());
+
+        return new AuthResponse(newAccessToken, refreshToken);
+    }
+
+    public void revokeRefreshToken(UUID refreshToken) {
+        refreshTokenRepository.deleteById(refreshToken);
     }
 }
