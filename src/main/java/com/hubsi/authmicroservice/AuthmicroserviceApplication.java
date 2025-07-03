@@ -8,9 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @OpenAPIDefinition(
 		info = @Info(
-				title = "Minha API",
+				title = "Authmicroservice API",
 				version = "1.0",
-				description = "Documentação da API com SpringDoc"
+				description = "É uma api de autenticação."
 		)
 )
 public class AuthmicroserviceApplication {

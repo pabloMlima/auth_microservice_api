@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -29,18 +31,16 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        /*
-                        .requestMatchers("/api/auth/**").permitAll() // Endpoints de autenticação abertos
-                        .requestMatchers("/actuator/**").permitAll() // Permitir acesso ao Actuator
-                        .requestMatchers("/v3/api-docs/**").permitAll() // Permitir acesso à documentação OpenAPI
-                        .requestMatchers("/swagger-ui/**").permitAll() // Permitir acesso à interface Swagger
-                        .requestMatchers("/swagger-ui.html").permitAll() // Permitir acesso à interface Swagger
-                        .requestMatchers("/webjars/**").permitAll() // Permitir acesso aos recursos estáticos do Swagger
-                        .requestMatchers("/v3/api-docs/**").permitAll() // Permitir acesso aos documentos OpenAPI
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/webjars/**",
+                                "/api/auth/**",
+                                "/actuator/**",
+                                "/api-docs/**"
+                        ).permitAll()
                         .anyRequest().authenticated() // Todas as outras requisições exigem autenticação
-
-                         */
-                        .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
