@@ -1,11 +1,12 @@
 package com.hubsi.authmicroservice.controller;
 
-import com.hubsi.authmicroservice.dto.request.LoginRequest;
-import com.hubsi.authmicroservice.dto.request.RegisterRequest;
-import com.hubsi.authmicroservice.dto.response.AuthResponse;
-import com.hubsi.authmicroservice.dto.response.RegisterResponse;
-import com.hubsi.authmicroservice.services.AuthService;
-import com.hubsi.authmicroservice.services.UserService;
+import com.hubsi.authmicroservice.adapters.in.controller.AuthController;
+import com.hubsi.authmicroservice.adapters.in.request.LoginRequest;
+import com.hubsi.authmicroservice.adapters.in.request.RegisterRequest;
+import com.hubsi.authmicroservice.adapters.out.response.AuthResponse;
+import com.hubsi.authmicroservice.adapters.out.response.RegisterResponse;
+import com.hubsi.authmicroservice.application.services.AuthService;
+import com.hubsi.authmicroservice.application.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
