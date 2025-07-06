@@ -19,28 +19,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Tag(name = "Auth", description = "Endpoints para autenticação de usuários")
 public class AuthController {
 
     private final UserService userService;
     private final AuthService authService;
-
-    @Operation(summary = "Registrar um novo usuário")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuário registrado com sucesso",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegisterResponse.class))),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
-            @ApiResponse(responseCode = "409", description = "Usuário já existe", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content),
-            @ApiResponse(responseCode = "503", description = "Serviço indisponível", content = @Content),
-            @ApiResponse(responseCode = "504", description = "Tempo limite de solicitação excedido", content = @Content),
-    })
-    @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(userService.registerUser(request));
-    }
 
     @Operation(summary = "Autenticar usuário")
     @ApiResponses(value = {
@@ -57,7 +42,16 @@ public class AuthController {
         return ResponseEntity.ok(authService.authenticateUser(request.email(), request.password()));
     }
 
-
+    @Operation(summary = "Atualizar token de autenticação")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Token atualizado com sucesso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Token inválido ou expirado", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content),
+            @ApiResponse(responseCode = "503", description = "Serviço indisponível", content = @Content),
+            @ApiResponse(responseCode = "504", description = "Tempo limite de solicitação excedido", content = @Content),
+    })
     @PostMapping("/refresh-token")
     public ResponseEntity<AuthResponse> refreshToken(
             @RequestParam UUID refreshToken
@@ -65,9 +59,24 @@ public class AuthController {
         return ResponseEntity.ok(authService.refreshToken(refreshToken));
     }
 
+    @Operation(summary = "Revogar token de autenticação")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Token revogado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Token inválido ou expirado", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content),
+            @ApiResponse(responseCode = "503", description = "Serviço indisponível", content = @Content),
+            @ApiResponse(responseCode = "504", description = "Tempo limite de solicitação excedido", content = @Content),
+    })
     @PostMapping("/logout")
     public ResponseEntity<Void> revokeToken(@RequestParam UUID refreshToken) {
         authService.revokeRefreshToken(refreshToken);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> recoverPassword(@RequestParam String email) {
+        userService.resetPassword(email);
         return ResponseEntity.noContent().build();
     }
 

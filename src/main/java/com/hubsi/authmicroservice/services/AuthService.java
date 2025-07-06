@@ -13,10 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Map;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
 @RequiredArgsConstructor
@@ -40,11 +38,9 @@ public class AuthService {
 
         String jwtToken = jwtService.generateToken(user);
         final Duration refreshTokenTtl = Duration.ofDays(7);
+        final RefreshToken refreshToken = saveRefreshToken(refreshTokenTtl, user);
 
-        return new AuthResponse(
-                jwtToken,
-                saveRefreshToken(refreshTokenTtl, user).getId()
-        );
+        return new AuthResponse(jwtToken, refreshToken.getId());
     }
 
     private RefreshToken saveRefreshToken(Duration refreshTokenTtl, User user) {
