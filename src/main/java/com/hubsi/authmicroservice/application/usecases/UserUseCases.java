@@ -1,7 +1,7 @@
 package com.hubsi.authmicroservice.application.usecases;
 
 import com.hubsi.authmicroservice.adapters.in.request.RegisterRequest;
-import com.hubsi.authmicroservice.adapters.out.persistence.entity.User;
+import com.hubsi.authmicroservice.adapters.out.persistence.entities.User;
 import com.hubsi.authmicroservice.adapters.out.response.RegisterResponse;
 import org.springframework.security.core.userdetails.UserDetails;
 

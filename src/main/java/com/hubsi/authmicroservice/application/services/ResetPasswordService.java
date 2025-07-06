@@ -1,10 +1,10 @@
 package com.hubsi.authmicroservice.application.services;
 
 import com.hubsi.authmicroservice.adapters.out.impl.EmailAdapter;
-import com.hubsi.authmicroservice.adapters.out.persistence.entity.ResetPassword;
-import com.hubsi.authmicroservice.adapters.out.persistence.entity.User;
-import com.hubsi.authmicroservice.adapters.out.persistence.repository.ResetPasswordRepository;
-import com.hubsi.authmicroservice.adapters.out.persistence.repository.UserRepository;
+import com.hubsi.authmicroservice.adapters.out.persistence.entities.ResetPassword;
+import com.hubsi.authmicroservice.adapters.out.persistence.entities.User;
+import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaResetPasswordRepository;
+import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -13,16 +13,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ResetPasswordService {
 
-    private final ResetPasswordRepository resetPasswordRepository;
+    private final JpaResetPasswordRepository jpaResetPasswordRepository;
 
     private final EmailAdapter emailAdapter;
 
-    private final UserRepository userRepository;
+    private final JpaUserRepository jpaUserRepository;
 
     private final JwtService jwtService;
 
     public void resetPassword(String email) {
-        User user = userRepository.findByEmail(email)
+        User user = jpaUserRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
         String jwtToken = jwtService.generateToken(user);
@@ -34,7 +34,7 @@ public class ResetPasswordService {
                 .expirationTime(java.time.Instant.now().plusSeconds(900)) // 10 minutes expiration
                 .build();
 
-        resetPasswordRepository.save(resetPassword);
+        jpaResetPasswordRepository.save(resetPassword);
 
         emailAdapter.sendEmail(
                 user.getEmail(),

@@ -1,4 +1,4 @@
-package com.hubsi.authmicroservice.adapters.out.persistence.entity;
+package com.hubsi.authmicroservice.adapters.out.persistence.entities;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,9 +1,9 @@
 package com.hubsi.authmicroservice.adapters.out.facades;
 
 import com.hubsi.authmicroservice.adapters.out.impl.EmailAdapter;
-import com.hubsi.authmicroservice.adapters.out.persistence.entity.ResetPassword;
-import com.hubsi.authmicroservice.adapters.out.persistence.entity.User;
-import com.hubsi.authmicroservice.adapters.out.persistence.repository.ResetPasswordRepository;
+import com.hubsi.authmicroservice.adapters.out.persistence.entities.ResetPassword;
+import com.hubsi.authmicroservice.adapters.out.persistence.entities.User;
+import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaResetPasswordRepository;
 import com.hubsi.authmicroservice.application.services.JwtService;
 import com.hubsi.authmicroservice.application.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PasswordResetFacade {
 
-    private final ResetPasswordRepository resetPasswordRepository;
+    private final JpaResetPasswordRepository jpaResetPasswordRepository;
 
     private final EmailAdapter emailAdapter;
 
@@ -35,7 +35,7 @@ public class PasswordResetFacade {
                 .expirationTime(java.time.Instant.now().plusSeconds(900)) // 10 minutes expiration
                 .build();
 
-        resetPasswordRepository.save(resetPassword);
+        jpaResetPasswordRepository.save(resetPassword);
 
         emailAdapter.sendEmail(
                 user.getEmail(),

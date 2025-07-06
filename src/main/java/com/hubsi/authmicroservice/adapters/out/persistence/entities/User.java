@@ -1,4 +1,4 @@
-package com.hubsi.authmicroservice.adapters.out.persistence.entity;
+package com.hubsi.authmicroservice.adapters.out.persistence.entities;
 
 import com.hubsi.authmicroservice.utils.enums.Role;
 import jakarta.persistence.*;
