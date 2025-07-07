@@ -1,6 +1,7 @@
-package com.hubsi.authmicroservice.adapters.out;
+package com.hubsi.authmicroservice.adapters.out.impl;
 
-import com.hubsi.authmicroservice.adapters.out.impl.EmailAdapter;
+import com.hubsi.authmicroservice.adapters.out.EmailAdapter;
+import com.hubsi.authmicroservice.infrastructure.exceptions.EmailSendingException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class JavaMailAdapter implements EmailAdapter {
             helper.setText(body, true);
             javaMailSender.send(message);
         } catch (MessagingException e) {
-            throw new RuntimeException("Failed to send email", e);
+            throw new EmailSendingException("Não foi possível enviar email", e);
         }
     }
 }

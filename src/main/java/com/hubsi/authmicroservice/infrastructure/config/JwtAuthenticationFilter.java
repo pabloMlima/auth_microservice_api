@@ -1,7 +1,7 @@
-package com.hubsi.authmicroservice.Infrastructure.config;
+package com.hubsi.authmicroservice.infrastructure.config;
 
-import com.hubsi.authmicroservice.application.services.JwtService;
-import com.hubsi.authmicroservice.application.services.UserService;
+import com.hubsi.authmicroservice.application.usecases.JwtUseCases;
+import com.hubsi.authmicroservice.application.usecases.UserUseCases;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,8 +20,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
-    private final UserService userService;
+    private final JwtUseCases jwtUseCases;
+    private final UserUseCases userUseCases;
 
     @Override
     protected void doFilterInternal(
@@ -39,12 +39,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(jwt);
+        userEmail = jwtUseCases.extractUsername(jwt);
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userService.loadUserByUsername(userEmail);
+            UserDetails userDetails = this.userUseCases.loadUserByUsername(userEmail);
 
-            if (jwtService.isTokenValid(jwt, userDetails)) {
+            if (jwtUseCases.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

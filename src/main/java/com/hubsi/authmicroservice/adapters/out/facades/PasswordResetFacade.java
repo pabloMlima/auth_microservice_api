@@ -1,6 +1,6 @@
 package com.hubsi.authmicroservice.adapters.out.facades;
 
-import com.hubsi.authmicroservice.adapters.out.impl.EmailAdapter;
+import com.hubsi.authmicroservice.adapters.out.EmailAdapter;
 import com.hubsi.authmicroservice.adapters.out.persistence.entities.ResetPassword;
 import com.hubsi.authmicroservice.adapters.out.persistence.entities.User;
 import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaResetPasswordRepository;

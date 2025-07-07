@@ -5,6 +5,7 @@ import com.hubsi.authmicroservice.adapters.out.persistence.entities.RefreshToken
 import com.hubsi.authmicroservice.adapters.out.persistence.entities.User;
 import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaRefreshTokenRepository;
 import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaUserRepository;
+import com.hubsi.authmicroservice.application.usecases.AuthUseCases;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +19,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthService implements AuthUseCases {
 
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -43,7 +44,7 @@ public class AuthService {
         return new AuthResponse(jwtToken, refreshToken.getId());
     }
 
-    private RefreshToken saveRefreshToken(Duration refreshTokenTtl, User user) {
+    public RefreshToken saveRefreshToken(Duration refreshTokenTtl, User user) {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUser(user);
         refreshToken.setExpiresAt(Instant.now().plus(refreshTokenTtl));

@@ -1,6 +1,7 @@
-package com.hubsi.authmicroservice.Infrastructure.config;
+package com.hubsi.authmicroservice.infrastructure.config;
 
 import com.hubsi.authmicroservice.adapters.out.response.ErrorResponse;
+import com.hubsi.authmicroservice.infrastructure.exceptions.EmailSendingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -73,29 +74,16 @@ public class GlobalHandlerExceptions {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(io.github.resilience4j.circuitbreaker.CallNotPermittedException.class)
-    public ResponseEntity<ErrorResponse> handleCallNotPermittedException(io.github.resilience4j.circuitbreaker.CallNotPermittedException ex, WebRequest request) {
+    @ExceptionHandler(EmailSendingException.class)
+    public ResponseEntity<ErrorResponse> handleEmailSendingException(EmailSendingException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
-                HttpStatus.SERVICE_UNAVAILABLE.value(),
-                "Service Unavailable",
-                "O serviço de autenticação está temporariamente indisponível. Tente novamente em alguns instantes.",
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                ex.getMessage(),
                 request.getDescription(false),
                 null
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.SERVICE_UNAVAILABLE);
-    }
-
-    @ExceptionHandler(java.util.concurrent.TimeoutException.class)
-    public ResponseEntity<ErrorResponse> handleTimeoutException(java.util.concurrent.TimeoutException ex, WebRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.GATEWAY_TIMEOUT.value(),
-                "Gateway Timeout",
-                "A operação excedeu o tempo limite. Tente novamente.",
-                request.getDescription(false),
-                null
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.GATEWAY_TIMEOUT);
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

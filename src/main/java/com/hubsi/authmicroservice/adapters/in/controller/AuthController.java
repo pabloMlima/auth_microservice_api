@@ -4,6 +4,7 @@ import com.hubsi.authmicroservice.adapters.in.request.LoginRequest;
 import com.hubsi.authmicroservice.adapters.out.response.AuthResponse;
 import com.hubsi.authmicroservice.application.services.AuthService;
 import com.hubsi.authmicroservice.application.services.UserService;
+import com.hubsi.authmicroservice.application.usecases.AuthUseCases;
 import com.hubsi.authmicroservice.application.usecases.UserUseCases;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,7 +24,7 @@ import java.util.UUID;
 @Tag(name = "Auth", description = "Endpoints para autenticação de usuários")
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthUseCases authUseCases;
 
     @Operation(summary = "Autenticar usuário")
     @ApiResponses(value = {
@@ -37,7 +38,7 @@ public class AuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
-        return ResponseEntity.ok(authService.authenticateUser(request.email(), request.password()));
+        return ResponseEntity.ok(authUseCases.authenticateUser(request.email(), request.password()));
     }
 
     @Operation(summary = "Atualizar token de autenticação")
@@ -54,7 +55,7 @@ public class AuthController {
     public ResponseEntity<AuthResponse> refreshToken(
             @RequestParam UUID refreshToken
     ) {
-        return ResponseEntity.ok(authService.refreshToken(refreshToken));
+        return ResponseEntity.ok(authUseCases.refreshToken(refreshToken));
     }
 
     @Operation(summary = "Revogar token de autenticação")
@@ -68,7 +69,7 @@ public class AuthController {
     })
     @PostMapping("/logout")
     public ResponseEntity<Void> revokeToken(@RequestParam UUID refreshToken) {
-        authService.revokeRefreshToken(refreshToken);
+        authUseCases.revokeRefreshToken(refreshToken);
         return ResponseEntity.noContent().build();
     }
     /*
