@@ -39,24 +39,10 @@ public class UserService implements UserDetailsService, UserUseCases {
     private final UserRepository userRepository;
 
     public UserDetails loadUserByUsername(String email) {
-        return jpaUserRepository.findByEmail(email)
+        return userRepository.findByEmail(email)
+                .map(UserDetailsImpl::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
     }
-
-    /*
-    public RegisterResponse registerUser(RegisterRequest request) {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String passCrypt = passwordEncoder.encode(request.password());
-        UserEntity userEntitySave = userMapper.toEntity(request, passCrypt, Role.USER);
-
-        UserEntity userEntity =  jpaUserRepository.save(userEntitySave);
-        String jwtToken = jwtService.generateToken(userEntity);
-        String message = "Usuário cadastrado com sucesso!";
-
-        return userMapper.entityToDtoRegister(userEntity, jwtToken, message);
-    }
-
-     */
 
     public RegisterResponse registerUser(RegisterRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

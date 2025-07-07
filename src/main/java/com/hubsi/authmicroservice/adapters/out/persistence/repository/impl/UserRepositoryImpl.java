@@ -6,7 +6,6 @@ import com.hubsi.authmicroservice.domain.user.User;
 import com.hubsi.authmicroservice.domain.user.UserRepository;
 import com.hubsi.authmicroservice.utils.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -18,17 +17,6 @@ public class UserRepositoryImpl implements UserRepository {
     private final JpaUserRepository jpaUserRepository;
 
     private final UserMapper userMapper;
-
-    /*
-    public UserRepositoryImpl(
-            JpaUserRepository jpaUserRepository,
-            UserMapper userMapper
-    ) {
-        this.jpaUserRepository = jpaUserRepository;
-        this.userMapper = userMapper;
-    }
-
-     */
 
     @Override
     public Optional<User> findByEmail(String email) {
