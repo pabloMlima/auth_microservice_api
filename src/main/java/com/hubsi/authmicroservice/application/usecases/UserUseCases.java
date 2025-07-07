@@ -1,7 +1,7 @@
 package com.hubsi.authmicroservice.application.usecases;
 
 import com.hubsi.authmicroservice.adapters.in.request.RegisterRequest;
-import com.hubsi.authmicroservice.adapters.out.persistence.entities.User;
+import com.hubsi.authmicroservice.adapters.out.persistence.entities.UserEntity;
 import com.hubsi.authmicroservice.adapters.out.response.RegisterResponse;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,5 +13,5 @@ public interface UserUseCases {
 
     RegisterResponse registerUser(RegisterRequest request);
 
-    Optional<User> findByEmail(String email);
+    Optional<UserEntity> findByEmail(String email);
 }

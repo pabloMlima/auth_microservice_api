@@ -2,10 +2,7 @@ package com.hubsi.authmicroservice.adapters.in.controller;
 
 import com.hubsi.authmicroservice.adapters.in.request.LoginRequest;
 import com.hubsi.authmicroservice.adapters.out.response.AuthResponse;
-import com.hubsi.authmicroservice.application.services.AuthService;
-import com.hubsi.authmicroservice.application.services.UserService;
 import com.hubsi.authmicroservice.application.usecases.AuthUseCases;
-import com.hubsi.authmicroservice.application.usecases.UserUseCases;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +34,7 @@ public class AuthController {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível", content = @Content),
             @ApiResponse(responseCode = "504", description = "Tempo limite de solicitação excedido", content = @Content),
     })
-    @PostMapping("/login")
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authUseCases.authenticateUser(request.email(), request.password()));
     }
@@ -51,7 +49,7 @@ public class AuthController {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível", content = @Content),
             @ApiResponse(responseCode = "504", description = "Tempo limite de solicitação excedido", content = @Content),
     })
-    @PostMapping("/refresh-token")
+    @PostMapping(value="/refresh-token", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AuthResponse> refreshToken(
             @RequestParam UUID refreshToken
     ) {
@@ -67,7 +65,7 @@ public class AuthController {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível", content = @Content),
             @ApiResponse(responseCode = "504", description = "Tempo limite de solicitação excedido", content = @Content),
     })
-    @PostMapping("/logout")
+    @PostMapping(value="/logout", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> revokeToken(@RequestParam UUID refreshToken) {
         authUseCases.revokeRefreshToken(refreshToken);
         return ResponseEntity.noContent().build();

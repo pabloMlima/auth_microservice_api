@@ -1,8 +1,8 @@
 package com.hubsi.authmicroservice.application.services;
 
 import com.hubsi.authmicroservice.adapters.out.response.AuthResponse;
-import com.hubsi.authmicroservice.adapters.out.persistence.entities.RefreshToken;
-import com.hubsi.authmicroservice.adapters.out.persistence.entities.User;
+import com.hubsi.authmicroservice.adapters.out.persistence.entities.RefreshTokenEntity;
+import com.hubsi.authmicroservice.adapters.out.persistence.entities.UserEntity;
 import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaRefreshTokenRepository;
 import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaUserRepository;
 import com.hubsi.authmicroservice.application.usecases.AuthUseCases;
@@ -34,21 +34,21 @@ public class AuthService implements AuthUseCases {
                         password
                 )
         );
-        User user = jpaUserRepository.findByEmail(email)
+        UserEntity userEntity = jpaUserRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
 
-        String jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(userEntity);
         final Duration refreshTokenTtl = Duration.ofDays(7);
-        final RefreshToken refreshToken = saveRefreshToken(refreshTokenTtl, user);
+        final RefreshTokenEntity refreshTokenEntity = saveRefreshToken(refreshTokenTtl, userEntity);
 
-        return new AuthResponse(jwtToken, refreshToken.getId());
+        return new AuthResponse(jwtToken, refreshTokenEntity.getId());
     }
 
-    public RefreshToken saveRefreshToken(Duration refreshTokenTtl, User user) {
-        RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setUser(user);
-        refreshToken.setExpiresAt(Instant.now().plus(refreshTokenTtl));
-        return jpaRefreshTokenRepository.save(refreshToken);
+    public RefreshTokenEntity saveRefreshToken(Duration refreshTokenTtl, UserEntity userEntity) {
+        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity();
+        refreshTokenEntity.setUserEntity(userEntity);
+        refreshTokenEntity.setExpiresAt(Instant.now().plus(refreshTokenTtl));
+        return jpaRefreshTokenRepository.save(refreshTokenEntity);
     }
 
     public AuthResponse refreshToken(UUID refreshToken) {
@@ -56,7 +56,7 @@ public class AuthService implements AuthUseCases {
                 .findByIdAndExpiresAtAfter(refreshToken, Instant.now())
                 .orElseThrow(() -> new UsernameNotFoundException("Refresh token inválido ou expirado!"));
 
-        final var newAccessToken = jwtService.generateToken(refreshTokenEntity.getUser());
+        final var newAccessToken = jwtService.generateToken(refreshTokenEntity.getUserEntity());
 
         return new AuthResponse(newAccessToken, refreshToken);
     }

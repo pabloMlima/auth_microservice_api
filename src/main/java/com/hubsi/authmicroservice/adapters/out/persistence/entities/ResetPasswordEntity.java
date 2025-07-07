@@ -14,7 +14,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResetPassword {
+public class ResetPasswordEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -23,7 +23,7 @@ public class ResetPassword {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private UserEntity userEntity;
 
     @Column(nullable = false, updatable = false)
     private String token;

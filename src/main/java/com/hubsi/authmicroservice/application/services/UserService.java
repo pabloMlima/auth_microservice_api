@@ -1,9 +1,12 @@
 package com.hubsi.authmicroservice.application.services;
 
 import com.hubsi.authmicroservice.adapters.in.request.RegisterRequest;
+import com.hubsi.authmicroservice.adapters.out.persistence.entities.UserEntity;
 import com.hubsi.authmicroservice.adapters.out.response.RegisterResponse;
-import com.hubsi.authmicroservice.adapters.out.persistence.entities.User;
+import com.hubsi.authmicroservice.adapters.out.security.UserDetailsImpl;
 import com.hubsi.authmicroservice.application.usecases.UserUseCases;
+import com.hubsi.authmicroservice.domain.user.User;
+import com.hubsi.authmicroservice.domain.user.UserRepository;
 import com.hubsi.authmicroservice.utils.enums.Role;
 import com.hubsi.authmicroservice.utils.mappers.UserMapper;
 import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaResetPasswordRepository;
@@ -33,24 +36,43 @@ public class UserService implements UserDetailsService, UserUseCases {
 
     private final JpaResetPasswordRepository jpaResetPasswordRepository;
 
+    private final UserRepository userRepository;
+
     public UserDetails loadUserByUsername(String email) {
         return jpaUserRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
     }
 
+    /*
     public RegisterResponse registerUser(RegisterRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String passCrypt = passwordEncoder.encode(request.password());
-        User userSave = userMapper.toEntity(request, passCrypt, Role.USER);
+        UserEntity userEntitySave = userMapper.toEntity(request, passCrypt, Role.USER);
 
-        User user =  jpaUserRepository.save(userSave);
-        String jwtToken = jwtService.generateToken(user);
+        UserEntity userEntity =  jpaUserRepository.save(userEntitySave);
+        String jwtToken = jwtService.generateToken(userEntity);
         String message = "Usuário cadastrado com sucesso!";
 
-        return userMapper.entityToDtoRegister(user, jwtToken, message);
+        return userMapper.entityToDtoRegister(userEntity, jwtToken, message);
     }
 
-    public Optional<User> findByEmail(String email) {
+     */
+
+    public RegisterResponse registerUser(RegisterRequest request) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String passCrypt = passwordEncoder.encode(request.password());
+
+        User user = userMapper.dtoToDomain(request, passCrypt, Role.USER);
+        User userSave = userRepository.save(user);
+        UserDetailsImpl userDetails = new UserDetailsImpl(userSave);
+
+        String jwtToken = jwtService.generateToken(userDetails);
+        String message = "Usuário cadastrado com sucesso!";
+
+        return userMapper.entityToDtoRegister(userSave, jwtToken, message);
+    }
+
+    public Optional<UserEntity> findByEmail(String email) {
         return jpaUserRepository.findByEmail(email);
     }
 }

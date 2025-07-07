@@ -1,8 +1,8 @@
 package com.hubsi.authmicroservice.application.services;
 
 import com.hubsi.authmicroservice.adapters.out.EmailAdapter;
-import com.hubsi.authmicroservice.adapters.out.persistence.entities.ResetPassword;
-import com.hubsi.authmicroservice.adapters.out.persistence.entities.User;
+import com.hubsi.authmicroservice.adapters.out.persistence.entities.ResetPasswordEntity;
+import com.hubsi.authmicroservice.adapters.out.persistence.entities.UserEntity;
 import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaResetPasswordRepository;
 import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,22 +22,22 @@ public class ResetPasswordService {
     private final JwtService jwtService;
 
     public void resetPassword(String email) {
-        User user = jpaUserRepository.findByEmail(email)
+        UserEntity userEntity = jpaUserRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-        String jwtToken = jwtService.generateToken(user);
-        ResetPassword resetPassword = ResetPassword.builder()
+        String jwtToken = jwtService.generateToken(userEntity);
+        ResetPasswordEntity resetPasswordEntity = ResetPasswordEntity.builder()
                 .token(jwtToken)
-                .user(user)
+                .userEntity(userEntity)
                 .usado(false)
                 .expirado(false)
                 .expirationTime(java.time.Instant.now().plusSeconds(900)) // 10 minutes expiration
                 .build();
 
-        jpaResetPasswordRepository.save(resetPassword);
+        jpaResetPasswordRepository.save(resetPasswordEntity);
 
         emailAdapter.sendEmail(
-                user.getEmail(),
+                userEntity.getEmail(),
                 "Reset Password",
                 "To reset your password, please click the link below:\n" +
                 "http://localhost:8080/reset-password?token=" + jwtToken

@@ -2,7 +2,6 @@ package com.hubsi.authmicroservice.adapters.in.controller;
 
 import com.hubsi.authmicroservice.adapters.in.request.RegisterRequest;
 import com.hubsi.authmicroservice.adapters.out.response.RegisterResponse;
-import com.hubsi.authmicroservice.application.services.UserService;
 import com.hubsi.authmicroservice.application.usecases.UserUseCases;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +35,7 @@ public class UserController {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível", content = @Content),
             @ApiResponse(responseCode = "504", description = "Tempo limite de solicitação excedido", content = @Content),
     })
-    @PostMapping("/register")
+    @PostMapping(value="/register", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(userUseCases.registerUser(request));
     }
