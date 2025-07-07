@@ -32,4 +32,9 @@ public class RefreshTokenImpl implements RefreshTokenRepository {
         RefreshTokenEntity savedEntity = jpaRefreshTokenRepository.save(refreshTokenEntity);
         return refreshTokenMapper.toDomain(savedEntity);
     }
+
+    @Override
+    public void deleteById(UUID id) {
+        jpaRefreshTokenRepository.deleteById(id);
+    }
 }

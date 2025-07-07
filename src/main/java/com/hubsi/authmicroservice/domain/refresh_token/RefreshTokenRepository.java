@@ -10,4 +10,6 @@ public interface RefreshTokenRepository {
     Optional<RefreshToken> findByIdAndExpiresAtAfter(UUID id, Instant date);
 
     RefreshToken save(RefreshToken refreshToken);
+
+    void deleteById(UUID id);
 }
