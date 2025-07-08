@@ -70,13 +70,6 @@ public class AuthController {
         authUseCases.revokeRefreshToken(refreshToken);
         return ResponseEntity.noContent().build();
     }
-    /*
-    @PostMapping("/reset-password")
-    public ResponseEntity<Void> recoverPassword(@RequestParam String email) {
-        userService.resetPassword(email);
-        return ResponseEntity.noContent().build();
-    }
 
-     */
 
 }

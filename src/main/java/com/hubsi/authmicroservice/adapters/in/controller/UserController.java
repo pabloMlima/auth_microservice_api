@@ -2,6 +2,7 @@ package com.hubsi.authmicroservice.adapters.in.controller;
 
 import com.hubsi.authmicroservice.adapters.in.request.RegisterRequest;
 import com.hubsi.authmicroservice.adapters.out.response.RegisterResponse;
+import com.hubsi.authmicroservice.application.usecases.ResetPasswordUseCases;
 import com.hubsi.authmicroservice.application.usecases.UserUseCases;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,10 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -24,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserUseCases userUseCases;
+
+    private final ResetPasswordUseCases resetPasswordUseCases;
 
     @Operation(summary = "Registrar um novo usuário")
     @ApiResponses(value = {
@@ -38,6 +38,12 @@ public class UserController {
     @PostMapping(value="/register", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(userUseCases.registerUser(request));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> recoverPassword(@RequestParam String email) {
+        resetPasswordUseCases.resetPassword(email);
+        return ResponseEntity.noContent().build();
     }
 
 }

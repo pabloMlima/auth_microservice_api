@@ -1,6 +1,6 @@
-package com.hubsi.authmicroservice.adapters.out.impl;
+package com.hubsi.authmicroservice.adapters.out.email;
 
-import com.hubsi.authmicroservice.adapters.out.EmailAdapter;
+import com.hubsi.authmicroservice.application.port.out.EmailAdapter;
 import com.hubsi.authmicroservice.infrastructure.exceptions.EmailSendingException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
