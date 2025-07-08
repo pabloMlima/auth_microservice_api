@@ -6,6 +6,20 @@ plugins {
 	id 'jacoco'
 }
 
+sonarqube {
+	properties {
+		property "sonar.projectKey", "authmicroservice"
+		property "sonar.projectName", "Auth Microservice"
+		property "sonar.projectVersion", "1.0"
+		property "sonar.host.url", "http://localhost:9000"
+		property "sonar.login", "sqp_08a5bc5ff32266e100e0eb92ae18e197fc993e5c"
+		property "sonar.sourceEncoding", "UTF-8"
+		property "sonar.sources", "src/main/java"
+		property "sonar.tests", "src/test/java"
+		property "sonar.java.binaries", "build/classes"
+	}
+}
+
 jacoco {
 	toolVersion = "0.8.10"
 }
