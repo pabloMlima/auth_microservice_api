@@ -120,13 +120,13 @@ class AuthServiceTest {
         verify(refreshTokenRepository, times(1)).save(any());
     }
 
-    /*
     @Test
     void testRefreshTokenWithValidToken() {
         // Arrange
         UUID validRefreshToken = UUID.randomUUID();
-        User user = new User(); // Mocked user object
+        User user = new User();
         RefreshToken refreshToken = new RefreshToken(user, Instant.now(), Instant.now().plus(Duration.ofDays(7)));
+        refreshToken.setId(validRefreshToken);
 
         when(refreshTokenRepository.findByIdAndExpiresAtAfter(eq(validRefreshToken), any())).thenReturn(Optional.of(refreshToken));
         when(jwtUseCases.generateToken(any())).thenReturn("newMockJwtToken");
@@ -140,8 +140,6 @@ class AuthServiceTest {
         verify(refreshTokenRepository, times(1)).findByIdAndExpiresAtAfter(eq(validRefreshToken), any());
         verify(jwtUseCases, times(1)).generateToken(any());
     }
-
-     */
 
     @Test
     void testSaveRefreshToken() {
@@ -161,4 +159,15 @@ class AuthServiceTest {
         verify(refreshTokenRepository, times(1)).save(any());
     }
 
+    @Test
+    void testRevokeRefreshToken() {
+        // Arrange
+        UUID refreshToken = UUID.randomUUID();
+
+        // Act
+        authService.revokeRefreshToken(refreshToken);
+
+        // Assert
+        verify(refreshTokenRepository, times(1)).deleteById(refreshToken);
+    }
 }
