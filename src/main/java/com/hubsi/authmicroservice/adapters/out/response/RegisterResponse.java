@@ -1,5 +1,6 @@
 package com.hubsi.authmicroservice.adapters.out.response;
 
+import com.hubsi.authmicroservice.utils.enums.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
@@ -24,7 +25,7 @@ public record RegisterResponse(
     String sobrenome,
 
     @Schema(description = "Função do usuário", example = "USER")
-    String role,
+    Role role,
 
     @Schema(description = "UUID do usuário", example = "fb502274-869d-46cb-805c-83e56571ab82")
     UUID id

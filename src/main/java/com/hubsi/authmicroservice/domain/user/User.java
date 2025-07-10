@@ -1,6 +1,5 @@
 package com.hubsi.authmicroservice.domain.user;
 
-import com.hubsi.authmicroservice.adapters.out.persistence.entities.RefreshTokenEntity;
 import com.hubsi.authmicroservice.utils.enums.Role;
 
 import java.util.*;

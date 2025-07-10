@@ -1,9 +1,8 @@
 package com.hubsi.authmicroservice.application.services;
 
 import com.hubsi.authmicroservice.application.usecases.JwtUseCases;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.hubsi.authmicroservice.infrastructure.exceptions.JwtInvalidException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,7 +53,11 @@ public class JwtService implements JwtUseCases {
     }
 
     public boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        try{
+            return extractExpiration(token).before(new Date());
+        }catch (Exception e) {
+            return true;
+        }
     }
 
     public Date extractExpiration(String token) {
@@ -62,12 +65,18 @@ public class JwtService implements JwtUseCases {
     }
 
     public Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            throw new JwtInvalidException("Token expirado", e);
+        } catch (JwtException e) {
+            throw new JwtInvalidException("Token inválido", e);
+        }
     }
 
     public Key getSignInKey() {

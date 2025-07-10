@@ -4,13 +4,12 @@ import com.hubsi.authmicroservice.adapters.in.request.RegisterRequest;
 import com.hubsi.authmicroservice.adapters.out.persistence.entities.UserEntity;
 import com.hubsi.authmicroservice.adapters.out.response.RegisterResponse;
 import com.hubsi.authmicroservice.adapters.out.security.UserDetailsImpl;
+import com.hubsi.authmicroservice.application.usecases.JwtUseCases;
 import com.hubsi.authmicroservice.application.usecases.UserUseCases;
 import com.hubsi.authmicroservice.domain.user.User;
 import com.hubsi.authmicroservice.domain.user.UserRepository;
 import com.hubsi.authmicroservice.utils.enums.Role;
 import com.hubsi.authmicroservice.utils.mappers.UserMapper;
-import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaResetPasswordRepository;
-import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,13 +27,9 @@ import java.util.Optional;
 @Log4j2
 public class UserService implements UserDetailsService, UserUseCases {
 
-    private final JpaUserRepository jpaUserRepository;
-
     private final UserMapper userMapper;
 
-    private final JwtService jwtService;
-
-    private final JpaResetPasswordRepository jpaResetPasswordRepository;
+    private final JwtUseCases jwtUseCases;
 
     private final UserRepository userRepository;
 
@@ -52,13 +47,13 @@ public class UserService implements UserDetailsService, UserUseCases {
         User userSave = userRepository.save(user);
         UserDetailsImpl userDetails = new UserDetailsImpl(userSave);
 
-        String jwtToken = jwtService.generateToken(userDetails);
+        String jwtToken = jwtUseCases.generateToken(userDetails);
         String message = "Usuário cadastrado com sucesso!";
 
         return userMapper.entityToDtoRegister(userSave, jwtToken, message);
     }
 
-    public Optional<UserEntity> findByEmail(String email) {
-        return jpaUserRepository.findByEmail(email);
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

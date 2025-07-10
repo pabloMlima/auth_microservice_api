@@ -169,5 +169,11 @@ class AuthServiceTest {
 
         // Assert
         verify(refreshTokenRepository, times(1)).deleteById(refreshToken);
+
+        // No exception should be thrown, so we don't need an assert here
+        // If an exception is thrown, the test will fail automatically
+        // This is a simple test to ensure that the method can be called without exceptions
+        assertDoesNotThrow(() -> authService.revokeRefreshToken(refreshToken));
+
     }
 }

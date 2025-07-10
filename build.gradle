@@ -94,3 +94,21 @@ tasks.jacocoTestReport {
 		html.required = true
 	}
 }
+
+jacocoTestReport {
+	afterEvaluate {
+		classDirectories.setFrom(
+				files(classDirectories.files.collect {
+					fileTree(dir: it, exclude: [
+							'com/hubsi/authmicroservice/domain/**', // Exclui o pacote de domínio
+							'com/hubsi/authmicroservice/config/**', // Exclui o pacote de configuração,
+							'com/hubsi/authmicroservice/exception/**', // Exclui o pacote de exceções,
+							'com/hubsi/authmicroservice/utils/mappers/**', // Exclui o pacote de mapeadores
+							'com/hubsi/authmicroservice/AuthmicroserviceApplication.class',
+							'com/hubsi/authmicroservice/adapters/out/persistence/entities/**',// Exclui o pacote de entidades,
+							'com/hubsi/authmicroservice/adapters/out/security/**', // Exclui o pacote de segurança
+					])
+				})
+		)
+	}
+}
