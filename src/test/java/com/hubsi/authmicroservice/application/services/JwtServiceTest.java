@@ -1,6 +1,7 @@
 package com.hubsi.authmicroservice.application.services;
 
 import com.hubsi.authmicroservice.application.usecases.JwtUseCases;
+import com.hubsi.authmicroservice.infrastructure.exceptions.JwtInvalidException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +45,7 @@ class JwtServiceTest {
 
         // Assert
         assertNotNull(token);
-        assertTrue(token.length() > 0);
+        assertFalse(token.isEmpty());
     }
 
     @Test
@@ -101,5 +102,33 @@ class JwtServiceTest {
         // Assert
         assertNotNull(claims);
         assertEquals("testuser", claims.getSubject());
+    }
+
+    @Test
+    void testExtractAllClaimsExpiredToken() {
+        // Arrange
+        String expiredToken = Jwts.builder()
+                .setSubject("user")
+                .setExpiration(new Date(System.currentTimeMillis() - 1000 * 60))
+                .signWith(((JwtService) jwtUseCases).getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+
+        // Act & Assert
+        JwtInvalidException exception = assertThrows(JwtInvalidException.class, () -> {
+            jwtUseCases.extractAllClaims(expiredToken);
+        });
+        assertTrue(exception.getMessage().contains("Token expirado"));
+    }
+
+    @Test
+    void testExtractAllClaimsInvalidToken() {
+        // Arrange
+        String invalidToken = "invalid.token.value";
+
+        // Act & Assert
+        JwtInvalidException exception = assertThrows(JwtInvalidException.class, () -> {
+            jwtUseCases.extractAllClaims(invalidToken);
+        });
+        assertTrue(exception.getMessage().contains("Token inválido"));
     }
 }

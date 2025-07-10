@@ -1,7 +1,7 @@
-package com.hubsi.authmicroservice.adapters.out.persistence.repository;
+package com.hubsi.authmicroservice.adapters.out.persistence.repository.impl;
 
 import com.hubsi.authmicroservice.adapters.out.persistence.entities.ResetPasswordEntity;
-import com.hubsi.authmicroservice.adapters.out.persistence.repository.impl.ResetPasswordRepositoryImpl;
+import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaResetPasswordRepository;
 import com.hubsi.authmicroservice.domain.reset_password.ResetPassword;
 import com.hubsi.authmicroservice.utils.mappers.ResetPasswordMapper;
 import org.junit.jupiter.api.BeforeEach;

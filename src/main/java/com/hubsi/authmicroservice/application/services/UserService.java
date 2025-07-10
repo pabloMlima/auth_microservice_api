@@ -1,7 +1,6 @@
 package com.hubsi.authmicroservice.application.services;
 
 import com.hubsi.authmicroservice.adapters.in.request.RegisterRequest;
-import com.hubsi.authmicroservice.adapters.out.persistence.entities.UserEntity;
 import com.hubsi.authmicroservice.adapters.out.response.RegisterResponse;
 import com.hubsi.authmicroservice.adapters.out.security.UserDetailsImpl;
 import com.hubsi.authmicroservice.application.usecases.JwtUseCases;

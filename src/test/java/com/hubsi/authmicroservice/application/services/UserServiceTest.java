@@ -96,4 +96,15 @@ class UserServiceTest {
         assertEquals(userSalvo.getEmail(), response.email());
     }
 
+    @Test
+    void testFindByEmail_UserNotFound() {
+        String email = "naoexiste@teste.com";
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        Optional<User> result = userService.findByEmail(email);
+
+        assertFalse(result.isPresent());
+        verify(userRepository, times(1)).findByEmail(email);
+    }
 }

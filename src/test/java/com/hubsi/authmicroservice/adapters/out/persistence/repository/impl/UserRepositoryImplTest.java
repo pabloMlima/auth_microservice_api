@@ -1,7 +1,7 @@
-package com.hubsi.authmicroservice.adapters.out.persistence.repository;
+package com.hubsi.authmicroservice.adapters.out.persistence.repository.impl;
 
 import com.hubsi.authmicroservice.adapters.out.persistence.entities.UserEntity;
-import com.hubsi.authmicroservice.adapters.out.persistence.repository.impl.UserRepositoryImpl;
+import com.hubsi.authmicroservice.adapters.out.persistence.repository.JpaUserRepository;
 import com.hubsi.authmicroservice.domain.user.User;
 import com.hubsi.authmicroservice.utils.mappers.UserMapper;
 import org.junit.jupiter.api.BeforeEach;

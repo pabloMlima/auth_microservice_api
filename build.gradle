@@ -12,11 +12,19 @@ sonarqube {
 		property "sonar.projectName", "Auth Microservice"
 		property "sonar.projectVersion", "1.0"
 		property "sonar.host.url", "http://localhost:9000"
-		property "sonar.login", "sqp_08a5bc5ff32266e100e0eb92ae18e197fc993e5c"
+		property "sonar.token", "sqp_08a5bc5ff32266e100e0eb92ae18e197fc993e5c"
 		property "sonar.sourceEncoding", "UTF-8"
 		property "sonar.sources", "src/main/java"
 		property "sonar.tests", "src/test/java"
 		property "sonar.java.binaries", "build/classes"
+		property "sonar.coverage.exclusions",
+				"com/hubsi/authmicroservice/domain/**," +
+						"com/hubsi/authmicroservice/config/**," +
+						"com/hubsi/authmicroservice/exception/**," +
+						"com/hubsi/authmicroservice/utils/mappers/**," +
+						"com/hubsi/authmicroservice/AuthmicroserviceApplication.class," +
+						"com/hubsi/authmicroservice/adapters/out/persistence/entities/**," +
+						"com/hubsi/authmicroservice/adapters/out/security/**"
 	}
 }
 
