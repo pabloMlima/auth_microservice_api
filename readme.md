@@ -26,7 +26,6 @@
 <div align="center">
 
 ## Sonar
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=wesleyosantos91_poc-multi-module-arch-hexagonal-springboot)](https://sonarcloud.io/dashboard?id=wesleyosantos91_poc-multi-module-arch-hexagonal-springboot)
 
 ![Lines of Code](https://img.shields.io/badge/line_of_code-1.3k-green%20?logo=sonarqubecloud)
 ![Coverage](https://img.shields.io/badge/coverage-96.2%25-green%20?logo=sonarqubecloud)
