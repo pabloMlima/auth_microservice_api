@@ -44,6 +44,15 @@ public class UserController {
         return ResponseEntity.ok(userUseCases.registerUser(request));
     }
 
+    @Operation(summary = "Redefinir senha do usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Senha redefinida com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content),
+            @ApiResponse(responseCode = "503", description = "Serviço indisponível", content = @Content),
+            @ApiResponse(responseCode = "504", description = "Tempo limite de solicitação excedido", content = @Content),
+    })
     @PostMapping("/reset-password")
     public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         resetPasswordUseCases.resetPassword(request.email());

@@ -14,7 +14,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class RefreshTokenImplTest {
+class RefreshTokenRepositoryImplTest {
 
     private JpaRefreshTokenRepository jpaRepository;
     private RefreshTokenMapper mapper;
