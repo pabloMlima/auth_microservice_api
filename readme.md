@@ -98,3 +98,43 @@
 - Clique na opção Locally
 - Preencha com `wos` e clique em Generate
 - Copie o token gerado e cole na variável de ambiente `SPRING_SONAR_TOKEN` no arquivo
+
+### Estrutura do projeto
+
+```plaintext
+authmicroservice/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/hubsi/authmicroservice/
+│   │   │       ├── adapters/           # Adaptadores de entrada/saída
+│   │   │       │   ├── in/             # Entrada (Controllers)
+│   │   │       │   │   ├── controller/ # Controllers REST
+│   │   │       │   │   └── request/    # DTOs de requisição
+│   │   │       │   └── out/            # Saída (Repositories)
+│   │   │       │       ├── persistence/ # Implementações de repositórios
+│   │   │       │       │   ├── repository/ # Repositórios JPA
+│   │   │       │       │   └── entities/   # Entidades JPA
+│   │   │       │       ├── email/         # Adapter de envio de email
+│   │   │       │       ├── response/      # DTOs de resposta
+│   │   │       │       └── security/      # Integrações de segurança
+│   │   │       ├── application/       # Casos de uso
+│   │   │       │   ├── service/       # Serviços de aplicação
+│   │   │       │   ├── usecases/      # Interfaces de casos de uso
+│   │   │       │   └── port/          # DTOs e portas de saída
+│   │   │       │       ├── out/       # Interfaces de repositórios
+│   │   │       ├── domain/            # Classes de domínio
+│   │   │       ├── infrastructure/    # Infraestrutura (DB, Email, etc)
+│   │   │       │   ├── config/        # Configurações do Spring
+│   │   │       │   ├── exceptions/    # Exceções personalizadas
+│   │   │       ├── utils/             # Utilitários e helpers
+│   │   │       │   ├── enums/         # Enumerações
+│   │   │       │   ├── mappers/       # Mapeadores
+│   │   │       │   └── validation/    # Validações customizadas
+│   │   └── resources/
+│   │       └── ...
+│   └── test/
+├── build.gradle
+├── docker-compose.yml
+├── README.md
+└── ...
