@@ -11,6 +11,7 @@ import com.hubsi.authmicroservice.domain.user.UserRepository;
 import com.hubsi.authmicroservice.infrastructure.exceptions.ResetPasswordTokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class ResetPasswordService implements ResetPasswordUseCases {
     private String urlFront;
 
     @Override
+    @Async
     public void resetPassword(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));

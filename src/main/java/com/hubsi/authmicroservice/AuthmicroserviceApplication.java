@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @OpenAPIDefinition(
@@ -15,6 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 		)
 )
 @EnableJpaAuditing
+@EnableAsync
 public class AuthmicroserviceApplication {
 
 	public static void main(String[] args) {
