@@ -1,6 +1,6 @@
 package com.hubsi.authmicroservice.application.services;
 
-import com.hubsi.authmicroservice.application.port.out.EmailAdapter;
+import com.hubsi.authmicroservice.infrastructure.port.out.EmailAdapter;
 import com.hubsi.authmicroservice.domain.reset_password.ResetPassword;
 import com.hubsi.authmicroservice.domain.reset_password.ResetPasswordRepository;
 import com.hubsi.authmicroservice.domain.user.User;
@@ -8,6 +8,7 @@ import com.hubsi.authmicroservice.domain.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ class ResetPasswordServiceTest {
         resetPasswordService = new ResetPasswordService(
                 emailAdapter, jwtService, userRepository, resetPasswordRepository
         );
+        ReflectionTestUtils.setField(resetPasswordService, "urlFront", "http://localhost:3000");
     }
 
     @Test
@@ -48,7 +50,7 @@ class ResetPasswordServiceTest {
         verify(emailAdapter, times(1)).sendEmail(
                 eq(email),
                 eq("Reset Password"),
-                contains("http://localhost:8080/reset-password?token=jwt-token")
+                contains("http://localhost:3000/reset-password?token=jwt-token")
         );
     }
 

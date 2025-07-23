@@ -5,6 +5,7 @@ import com.hubsi.authmicroservice.adapters.in.request.ResetPasswordRequest;
 import com.hubsi.authmicroservice.adapters.out.response.RegisterResponse;
 import com.hubsi.authmicroservice.application.usecases.ResetPasswordUseCases;
 import com.hubsi.authmicroservice.application.usecases.UserUseCases;
+import com.hubsi.authmicroservice.infrastructure.constants.RoutesConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -56,6 +57,21 @@ public class UserController {
     @PostMapping("/reset-password")
     public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         resetPasswordUseCases.resetPassword(request.email());
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Confirmar redefinição de senha")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Senha atualizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Token inválido ou expirado", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content),
+            @ApiResponse(responseCode = "503", description = "Serviço indisponível", content = @Content),
+            @ApiResponse(responseCode = "504", description = "Tempo limite de solicitação excedido", content = @Content),
+    })
+    @PutMapping(RoutesConstants.USER_UPDATE_PASSWORD)
+    public ResponseEntity<Void> updatePassword(@RequestParam String token, @RequestParam String newPassword) {
+        resetPasswordUseCases.confirmResetPassword(token, newPassword);
         return ResponseEntity.noContent().build();
     }
 

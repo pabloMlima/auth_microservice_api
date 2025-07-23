@@ -1,6 +1,7 @@
 package com.hubsi.authmicroservice.infrastructure.config;
 
 import com.hubsi.authmicroservice.application.usecases.UserUseCases;
+import com.hubsi.authmicroservice.infrastructure.constants.RoutesConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,17 +32,16 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/webjars/**",
-                                "/actuator/**",
-                                "/api-docs/**",
-                                "/api/v1/auth/register",
-                                "/api/v1/auth/login",
-                                "/api/v1/user/register",
-                                "/api/v1/user/reset-password"
-
+                                RoutesConstants.SWAGGER_API_DOCS,
+                                RoutesConstants.SWAGGER_UI,
+                                RoutesConstants.SWAGGER_UI_HTML,
+                                RoutesConstants.SWAGGER_WEBJARS,
+                                RoutesConstants.ACTUATOR,
+                                RoutesConstants.SWAGGER_API_DOCS_V3,
+                                RoutesConstants.AUTH,
+                                RoutesConstants.USER_REGISTER,
+                                RoutesConstants.USER_RESET_PASSWORD,
+                                RoutesConstants.USER_UPDATE_PASSWORD_SECURITY
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

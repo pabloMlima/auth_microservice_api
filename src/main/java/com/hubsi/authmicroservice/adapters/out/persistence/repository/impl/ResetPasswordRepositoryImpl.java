@@ -8,6 +8,8 @@ import com.hubsi.authmicroservice.utils.mappers.ResetPasswordMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class ResetPasswordRepositoryImpl implements ResetPasswordRepository {
@@ -23,5 +25,13 @@ public class ResetPasswordRepositoryImpl implements ResetPasswordRepository {
         );
 
         return resetPasswordMapper.toDomain(resetPasswordEntity);
+    }
+
+    @Override
+    public Optional<ResetPassword> findByToken(String token) {
+        ResetPasswordEntity resetPasswordEntity = jpaResetPasswordRepository.findByToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid reset password token"));
+
+        return Optional.ofNullable(resetPasswordMapper.toDomain(resetPasswordEntity));
     }
 }

@@ -140,4 +140,60 @@ class UserControllerTest {
         assertEquals(ResponseEntity.noContent().build(), response);
         verify(resetPasswordUseCases, times(1)).resetPassword("test@example.com");
     }
+
+    @Test
+    void testUpdatePasswordSuccess() {
+        // Arrange
+        String token = "validToken";
+        String newPassword = "newStrongPassword";
+        ResetPasswordUseCases resetPasswordUseCases = mock(ResetPasswordUseCases.class);
+        UserController controller = new UserController(userUseCases, resetPasswordUseCases);
+
+        // Act
+        ResponseEntity<Void> response = controller.updatePassword(token, newPassword);
+
+        // Assert
+        assertEquals(ResponseEntity.noContent().build(), response);
+        verify(resetPasswordUseCases, times(1)).confirmResetPassword(token, newPassword);
+    }
+
+    @Test
+    void testUpdatePasswordWithInvalidToken() {
+        // Arrange
+        String token = "invalidToken";
+        String newPassword = "newStrongPassword";
+        ResetPasswordUseCases resetPasswordUseCases = mock(ResetPasswordUseCases.class);
+        UserController controller = new UserController(userUseCases, resetPasswordUseCases);
+
+        doThrow(new IllegalArgumentException("Token inválido ou expirado")).when(resetPasswordUseCases)
+                .confirmResetPassword(token, newPassword);
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            controller.updatePassword(token, newPassword);
+        });
+
+        assertEquals("Token inválido ou expirado", exception.getMessage());
+        verify(resetPasswordUseCases, times(1)).confirmResetPassword(token, newPassword);
+    }
+
+    @Test
+    void testUpdatePasswordWithWeakPassword() {
+        // Arrange
+        String token = "validToken";
+        String newPassword = "123";
+        ResetPasswordUseCases resetPasswordUseCases = mock(ResetPasswordUseCases.class);
+        UserController controller = new UserController(userUseCases, resetPasswordUseCases);
+
+        doThrow(new jakarta.validation.ConstraintViolationException("A senha deve ter pelo menos 8 caracteres.", null))
+                .when(resetPasswordUseCases).confirmResetPassword(token, newPassword);
+
+        // Act & Assert
+        jakarta.validation.ConstraintViolationException exception = assertThrows(jakarta.validation.ConstraintViolationException.class, () -> {
+            controller.updatePassword(token, newPassword);
+        });
+
+        assertEquals("A senha deve ter pelo menos 8 caracteres.", exception.getMessage());
+        verify(resetPasswordUseCases, times(1)).confirmResetPassword(token, newPassword);
+    }
 }

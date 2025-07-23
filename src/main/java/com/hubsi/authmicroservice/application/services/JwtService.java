@@ -83,4 +83,13 @@ public class JwtService implements JwtUseCases {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+    public boolean isTokenValid(String token) {
+        try {
+            extractAllClaims(token);
+            return true;
+        } catch (JwtInvalidException e) {
+            return false;
+        }
+    }
 }

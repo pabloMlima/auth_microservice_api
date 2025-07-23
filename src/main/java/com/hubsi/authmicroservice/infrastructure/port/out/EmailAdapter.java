@@ -1,4 +1,4 @@
-package com.hubsi.authmicroservice.application.port.out;
+package com.hubsi.authmicroservice.infrastructure.port.out;
 
 public interface EmailAdapter {
 

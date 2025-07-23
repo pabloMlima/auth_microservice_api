@@ -24,4 +24,6 @@ public interface JwtUseCases {
     Claims extractAllClaims(String token);
 
     Key getSignInKey();
+
+    boolean isTokenValid(String token);
 }
