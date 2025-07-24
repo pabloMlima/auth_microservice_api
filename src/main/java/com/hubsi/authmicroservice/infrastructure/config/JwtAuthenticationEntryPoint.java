@@ -13,6 +13,16 @@ import java.io.IOException;
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
 
+    /**
+     * Método que lida com tentativas de acesso não autorizado.
+     * Retorna um erro 401 (Unauthorized) com a mensagem da exceção de autenticação.
+     *
+     * @param request       A requisição HTTP
+     * @param response      A resposta HTTP
+     * @param authException A exceção de autenticação
+     * @throws IOException      Se ocorrer um erro de entrada/saída
+     * @throws ServletException Se ocorrer um erro de servlet
+     */
     @Override
     public void commence(
             HttpServletRequest request,

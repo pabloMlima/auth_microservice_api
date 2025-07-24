@@ -16,6 +16,12 @@ public class AsyncConfig implements AsyncConfigurer {
         this.globalAsyncExceptionHandler = globalAsyncExceptionHandler;
     }
 
+    /**
+     * Configura o executor assíncrono para tarefas em segundo plano.
+     * Define o tamanho do pool de threads, a capacidade da fila e o prefixo dos nomes das threads.
+     *
+     * @return Executor configurado para tarefas assíncronas
+     */
     @Override
     public Executor getAsyncExecutor(){
         ThreadPoolTaskExecutor threadPoolExecutor= new ThreadPoolTaskExecutor();
@@ -28,6 +34,12 @@ public class AsyncConfig implements AsyncConfigurer {
     }
 
 
+    /**
+     * Retorna o manipulador de exceções assíncronas global.
+     * Este manipulador lida com exceções lançadas por métodos assíncronos.
+     *
+     * @return AsyncUncaughtExceptionHandler configurado
+     */
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler(){
         return globalAsyncExceptionHandler;
